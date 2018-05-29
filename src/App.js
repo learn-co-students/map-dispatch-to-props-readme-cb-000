@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addItem } from  './actions/items';
 
 class App extends Component {
 
   handleOnClick() {
-    this.props.store.dispatch(addItem());
+    this.props.addItem(); // calls the action creator
   }
 
   render() {
     return (
       <div className="App">
-        <button onClick={(event) => this.handleOnClick(event)}>
-          Click
-          </button>
+        <button onClick={ this.handleOnClick.bind(this) }>Click</button>
         <p>{this.props.items.length}</p>
       </div>
     );
@@ -27,4 +26,12 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+// bind the action creater to dispatch so dispatch
+// is called when the action creator is invoked
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({
+    addItem: addItem
+  }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
